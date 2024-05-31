@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Student</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+  button[type="submit"],
+  button[type="button"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  button[type="submit"]:hover,
+  button[type="button"]:hover {
+    background-color: #45a049;
+  }
+
+  @media screen and (max-width: 600px) {
+    .container {
+      width: 90%;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Add Student</h1>
+  <form id="studentForm" onsubmit="handleFormSubmit(event)">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" required>
+    <label for="grade">Grade:</label>
+    <input type="text" id="grade" name="grade" required>
+    <button type="submit">Submit</button>
+  </form>
+  <button onclick="fetchStudentData()">Student Data</button>
+</div>
+
+<script>
+  async function handleFormSubmit(event) {
+    event.preventDefault(); 
+
+    const name = document.getElementById('name').value;
+    const age = document.getElementById('age').value;
+    const grade = document.getElementById('grade').value;
+
+    try {
+      const response = await fetch('http://localhost:3000/addStudent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, age, grade })
+      });
+      if (!response.ok) {
+        throw new Error('Failed to add student');
+      }
+      const result = await response.json();
+      alert(result.message);
+      // Clear the form
+      document.getElementById('name').value = '';
+      document.getElementById('age').value = '';
+      document.getElementById('grade').value = '';
+    } catch (error) {
+      console.error('Error adding student:', error);
+      alert('Failed to add student');
+    }
+  }
+
+  async function fetchStudentData() {
+    window.location.href = 'http://localhost:3000/students';
+  }
+</script>
+
+</body>
+</html>
+
